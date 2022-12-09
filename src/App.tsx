@@ -6,7 +6,7 @@ const queryClient = new QueryClient();
 
 const BASE = 'https://statsapi.web.nhl.com/api/v1';
 
-function App() {
+export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <div className='bg-black w-screen h-screen overflow-auto'>
@@ -17,8 +17,6 @@ function App() {
     </QueryClientProvider>
   );
 }
-
-export default App;
 
 function Index() {
   const gameId = 2022020211;
@@ -75,25 +73,18 @@ const LiveFeedDisplay: React.FC<{ data: LiveFeed }> = ({ data }) => {
               {away.abbreviation}
             </p>
           </div>
-          <div className='rounded-xl bg-teal-600/20 text-center p-5 h-full'>
-            <div className='flex'>
-              <p className='text-[10rem] leading-none m-auto'>
-                {linescore.teams.away.goals}
-              </p>
-              <div className='my-auto'>
-                <p className='text-4xl text-teal-900'>SHOTS</p>
-                <p className='text-8xl'>{linescore.teams.away.shotsOnGoal}</p>
-              </div>
+          <div className='rounded-xl bg-teal-600/20 text-center p-5 flex'>
+            <p className='text-[10rem] leading-none m-auto'>
+              {linescore.teams.away.goals}
+            </p>
+            <div className='my-auto'>
+              <p className='text-4xl text-teal-900'>SHOTS</p>
+              <p className='text-8xl'>{linescore.teams.away.shotsOnGoal}</p>
             </div>
           </div>
         </div>
         <div className='mt-10 text-center mx-5'>
           <p className='text-teal-600/40 text-4xl'>@</p>
-          {/*<p className='text-teal-900 mt-12 text-5xl'>
-            {play.about.periodTimeRemaining}
-          </p>
-          <p className='text-teal-900/40 text-5xl'>-</p>
-          <p className='text-teal-900 text-5xl'>{play.about.periodTime}</p>*/}
         </div>
         <div className='mx-auto'>
           <div className='flex'>
@@ -106,18 +97,20 @@ const LiveFeedDisplay: React.FC<{ data: LiveFeed }> = ({ data }) => {
               alt={home.name}
             />
           </div>
-          <div className='rounded-xl bg-teal-600/20 text-center p-5 h-full'>
-            <div className='flex'>
-              <p className='text-[10rem] leading-none m-auto'>
-                {linescore.teams.home.goals}
-              </p>
-              <div className='my-auto'>
-                <p className='text-4xl text-teal-900'>SHOTS</p>
-                <p className='text-8xl'>{linescore.teams.home.shotsOnGoal}</p>
-              </div>
+          <div className='rounded-xl bg-teal-600/20 text-center p-5 flex'>
+            <p className='text-[10rem] leading-none m-auto'>
+              {linescore.teams.home.goals}
+            </p>
+            <div className='my-auto'>
+              <p className='text-4xl text-teal-900'>SHOTS</p>
+              <p className='text-8xl'>{linescore.teams.home.shotsOnGoal}</p>
             </div>
           </div>
         </div>
+      </div>
+      <div className='rounded-xl bg-teal-600/20 p-5 mt-4 text-center text-7xl'>
+        {linescore.currentPeriodOrdinal} -{' '}
+        {linescore.currentPeriodTimeRemaining}
       </div>
     </div>
   );
