@@ -42,12 +42,12 @@ export default function Index() {
     ) : !data.dates.length ? (
       <BigInfoText>No games are scheduled today</BigInfoText>
     ) : (
-      <div>
+      <div className='h-full flex flex-col'>
         <h1 className='text-5xl mt-4 ml-2'>
           Games today,{' '}
           <span className='text-teal-900'>{now.toLocaleDateString()}</span>
         </h1>
-        <div className='flex flex-wrap mt-4 text-2xl text-teal-900 ml-4'>
+        <div className='flex flex-wrap mt-4 text-2xl text-teal-900 ml-4 overflow-y-auto'>
           {data.dates[0].games.map((game) => {
             return (
               <Link key={game.gamePk} to={`/?gameId=${game.gamePk}`}>
