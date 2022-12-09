@@ -1,27 +1,21 @@
+import { LoaderFunction } from '@remix-run/node';
+import { Link, useLoaderData } from '@remix-run/react';
 import React from 'react';
-import { useQuery, QueryClient, QueryClientProvider } from 'react-query';
-import { ErrorMessage } from './types/Error';
-import { LiveFeed } from './types/LiveFeed';
-import { Schedule } from './types/Schedule';
+import { useQuery } from 'react-query';
+import { BASE } from '~/root';
+import { ErrorMessage } from '~/types/Error';
+import { LiveFeed } from '~/types/LiveFeed';
+import { Schedule } from '~/types/Schedule';
 
-const queryClient = new QueryClient();
+export const loader: LoaderFunction = async ({ request }) => {
+  const url = new URL(request.url);
+  return {
+    gameId: url.searchParams.get('gameId'),
+  };
+};
 
-const BASE = 'https://statsapi.web.nhl.com/api/v1';
-
-export default function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <div className='bg-black w-screen h-screen overflow-auto'>
-        <div className='bg-teal-100 w-full h-full rounded-3xl pt-1 pb-2 px-6 font-black overflow-auto'>
-          <Index />
-        </div>
-      </div>
-    </QueryClientProvider>
-  );
-}
-
-function Index() {
-  const gameId = new URLSearchParams(window.location.search).get('gameId');
+export default function Index() {
+  const { gameId } = useLoaderData<typeof loader>();
   if (!gameId) {
     const now = new Date();
     const { data } = useQuery<Schedule>(
@@ -56,7 +50,7 @@ function Index() {
         <div className='flex flex-wrap mt-4 text-2xl text-teal-900 ml-4'>
           {data.dates[0].games.map((game) => {
             return (
-              <a key={game.gamePk} href={`/?gameId=${game.gamePk}`}>
+              <Link key={game.gamePk} to={`/?gameId=${game.gamePk}`}>
                 <RoundedBox className='p-3 m-2 w-40 hover:-translate-y-1 transition'>
                   <div className='flex'>
                     <span className='mx-auto'>
@@ -82,7 +76,7 @@ function Index() {
                     </>
                   )}
                 </RoundedBox>
-              </a>
+              </Link>
             );
           })}
         </div>
