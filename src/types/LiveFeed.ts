@@ -49,12 +49,12 @@ export interface LiveFeed {
     };
     linescore: {
       currentPeriod: 3;
-      currentPeriodOrdinal: '3rd';
+      currentPeriodOrdinal: PeriodOrdinal;
       currentPeriodTimeRemaining: 'Final';
       periods: {
         periodType: 'REGULAR';
         num: 1 | 2 | 3;
-        ordinalNum: '1st' | '2nd' | '3rd';
+        ordinalNum: PeriodOrdinal;
         home: {
           goals: number;
           shotsOnGoal: number;
@@ -141,7 +141,7 @@ export interface Play {
     eventId: number;
     period: 1 | 2 | 3;
     periodType: 'REGULAR'; // | 'OVERTIME';
-    ordinalNum: '1st' | '2nd' | '3rd'; // | 'OT' | 'SO';
+    ordinalNum: PeriodOrdinal;
     periodTime: string;
     periodTimeRemaining: string;
     dateTime: string;
@@ -196,3 +196,5 @@ interface TeamBoxScore {
     };
   }[];
 }
+
+export type PeriodOrdinal = '1st' | '2nd' | '3rd' | 'OT'; // | 'SO';
