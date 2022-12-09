@@ -207,6 +207,15 @@ const BigInfoText: React.FC<React.PropsWithChildren> = ({ children }) => (
   </div>
 );
 
+/** 20220101_010203 => January 1, 2022, 01:02:03 (24hr) */
+const timestampToDate = (timestamp: string) => {
+  const match = timestamp.match(/(\d{4})(\d{2})(\d{2})_(\d{2})(\d{2})(\d{2})/);
+  if (match) {
+    const t = match.slice(1, 6).map((e) => Number(e));
+    return new Date(t[0], t[1] - 1, t[2], t[3], t[4]);
+  }
+};
+
 const teamLogo = (teamId: number) => {
   return `https://www-league.nhlstatic.com/images/logos/teams-20222023-light/${teamId}.svg`;
 };
