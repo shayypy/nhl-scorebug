@@ -7,10 +7,10 @@ A [scorebug](https://en.wikipedia.org/wiki/Score_bug) for NHL games (goals + sho
 Largely, this project exists because some networks feel it's unnecessary to provide shots in their scorebug, but I like looking at them. That is the crux, but some other fun addendums include:
 
 - Portable & pretty live data intended for viewing at a distance (e.g. at some kind of hockey party where you don't want to show all the games but you do want to show the scores?)
-<!--
 - Nifty web interface to select games (designed for touchscreens)
-- Companion page for mobile phones to select a game from your sofa (currently unrestricted)
-  -->
+<!--
+  - Companion page for mobile phones to select a game from your sofa (currently unrestricted)
+-->
 
 ## Contributing
 

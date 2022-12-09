@@ -1,6 +1,7 @@
 import React from 'react';
 import { useQuery, QueryClient, QueryClientProvider } from 'react-query';
 import { LiveFeed } from './types/LiveFeed';
+import { Schedule } from './types/Schedule';
 
 const queryClient = new QueryClient();
 
@@ -21,7 +22,57 @@ export default function App() {
 function Index() {
   const gameId = new URLSearchParams(window.location.search).get('gameId');
   if (!gameId) {
-    return <BigInfoText>No game ID provided</BigInfoText>;
+    const now = new Date();
+    const { data } = useQuery<Schedule>(
+      'schedule',
+      async () => {
+        const response = await fetch(
+          `${BASE}/schedule?hydrate=team&date=${now.getFullYear()}-${
+            now.getMonth() + 1
+          }-${now.getDate()}`,
+          {
+            method: 'GET',
+          }
+        );
+        return await response.json();
+      },
+      {
+        // refetchInterval: 10000,
+        refetchOnWindowFocus: false,
+      }
+    );
+
+    return !data ? (
+      <BigInfoText>Loading...</BigInfoText>
+    ) : !data.dates.length ? (
+      <BigInfoText>No games are scheduled today</BigInfoText>
+    ) : (
+      <div>
+        <h1 className='text-5xl mt-4 ml-2'>
+          Games today,{' '}
+          <span className='text-teal-900'>{now.toLocaleDateString()}</span>
+        </h1>
+        <div className='flex flex-wrap mt-4 text-2xl text-teal-900 ml-4'>
+          {data.dates[0].games.map((game) => {
+            return (
+              <a key={game.gamePk} href={`/?gameId=${game.gamePk}`}>
+                <RoundedBox className='p-3 m-2 w-40'>
+                  <div className='flex'>
+                    <span className='mx-auto'>
+                      {game.teams.away.team.abbreviation}
+                    </span>{' '}
+                    <span className='mx-auto opacity-30 text-lg'>@</span>{' '}
+                    <span className='mx-auto'>
+                      {game.teams.home.team.abbreviation}
+                    </span>
+                  </div>
+                </RoundedBox>
+              </a>
+            );
+          })}
+        </div>
+      </div>
+    );
   }
 
   const { data } = useQuery<LiveFeed>(
