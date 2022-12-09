@@ -71,16 +71,20 @@ const LiveFeedDisplay: React.FC<{ data: LiveFeed }> = ({ data }) => {
               className='w-32 h-32 mr-4'
               alt={away.name}
             />
-            <p className='text-teal-700 text-7xl italic my-auto'>
+            <p className='text-teal-900 bg-teal-600/20 rounded-xl px-4 py-2 text-7xl my-auto'>
               {away.abbreviation}
             </p>
           </div>
-          <div className='rounded-xl bg-teal-600/20 text-center p-5'>
-            <p className='text-[9rem] leading-none'>
-              {linescore.teams.away.goals}
-            </p>
-            <p className='text-3xl text-teal-900 mt-6'>SHOTS</p>
-            <p className='text-7xl'>{linescore.teams.away.shotsOnGoal}</p>
+          <div className='rounded-xl bg-teal-600/20 text-center p-5 h-full'>
+            <div className='flex'>
+              <p className='text-[10rem] leading-none m-auto'>
+                {linescore.teams.away.goals}
+              </p>
+              <div className='my-auto'>
+                <p className='text-4xl text-teal-900'>SHOTS</p>
+                <p className='text-8xl'>{linescore.teams.away.shotsOnGoal}</p>
+              </div>
+            </div>
           </div>
         </div>
         <div className='mt-10 text-center mx-5'>
@@ -93,7 +97,7 @@ const LiveFeedDisplay: React.FC<{ data: LiveFeed }> = ({ data }) => {
         </div>
         <div className='mx-auto'>
           <div className='flex'>
-            <p className='text-teal-700 text-7xl italic my-auto'>
+            <p className='text-teal-900 bg-teal-600/20 rounded-xl px-4 py-2 text-7xl my-auto'>
               {home.abbreviation}
             </p>
             <img
@@ -102,12 +106,16 @@ const LiveFeedDisplay: React.FC<{ data: LiveFeed }> = ({ data }) => {
               alt={home.name}
             />
           </div>
-          <div className='rounded-xl bg-teal-600/20 text-center p-5'>
-            <p className='text-[9rem] leading-none'>
-              {linescore.teams.home.goals}
-            </p>
-            <p className='text-3xl text-teal-900 mt-6'>SHOTS</p>
-            <p className='text-7xl'>{linescore.teams.home.shotsOnGoal}</p>
+          <div className='rounded-xl bg-teal-600/20 text-center p-5 h-full'>
+            <div className='flex'>
+              <p className='text-[10rem] leading-none m-auto'>
+                {linescore.teams.home.goals}
+              </p>
+              <div className='my-auto'>
+                <p className='text-4xl text-teal-900'>SHOTS</p>
+                <p className='text-8xl'>{linescore.teams.home.shotsOnGoal}</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
