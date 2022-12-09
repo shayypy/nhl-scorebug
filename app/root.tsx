@@ -15,7 +15,6 @@ import { QueryClientProvider } from 'react-query';
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',
   title: 'NHL Scorebug',
-  viewport: 'width=device-width,initial-scale=1',
 });
 
 const queryClient = new QueryClient();
