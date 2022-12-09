@@ -1,5 +1,6 @@
 import React from 'react';
 import { useQuery, QueryClient, QueryClientProvider } from 'react-query';
+import { ErrorMessage } from './types/Error';
 import { LiveFeed } from './types/LiveFeed';
 import { Schedule } from './types/Schedule';
 
@@ -89,7 +90,7 @@ function Index() {
     );
   }
 
-  const { data } = useQuery<LiveFeed>(
+  const { data } = useQuery<LiveFeed | ErrorMessage>(
     ['game', gameId],
     async () => {
       const response = await fetch(`${BASE}/game/${gameId}/feed/live`, {
@@ -105,6 +106,10 @@ function Index() {
 
   return !data ? (
     <BigInfoText>Loading...</BigInfoText>
+  ) : 'message' in data ? (
+    <BigInfoText>
+      {data.message} <span className='opacity-30'>[{data.messageNumber}]</span>
+    </BigInfoText>
   ) : (
     <LiveFeedDisplay data={data} />
   );
@@ -198,7 +203,7 @@ const RoundedBox: React.FC<
 
 const BigInfoText: React.FC<React.PropsWithChildren> = ({ children }) => (
   <div className='flex w-full h-full'>
-    <div className='m-auto text-6xl'>{children}</div>
+    <div className='m-auto text-6xl text-center'>{children}</div>
   </div>
 );
 
