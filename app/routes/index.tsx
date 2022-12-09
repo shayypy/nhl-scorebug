@@ -32,7 +32,7 @@ export default function Index() {
         return await response.json();
       },
       {
-        // refetchInterval: 10000,
+        refetchInterval: 1200000,
         refetchOnWindowFocus: false,
       }
     );
@@ -93,7 +93,7 @@ export default function Index() {
       return await response.json();
     },
     {
-      // refetchInterval: 10000,
+      refetchInterval: 20000,
       refetchOnWindowFocus: false,
     }
   );
