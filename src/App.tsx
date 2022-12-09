@@ -19,16 +19,10 @@ export default function App() {
 }
 
 function Index() {
-  const gameId = 2022020211;
-
-  //const { data: teams } = useQuery<Team[]>(
-  //  'teams',
-  //  async () => {
-  //    const response = await fetch(`${BASE}/teams`, { method: 'GET' });
-  //    return (await response.json()).teams;
-  //  },
-  //  { refetchOnWindowFocus: false }
-  //);
+  const gameId = new URLSearchParams(window.location.search).get('gameId');
+  if (!gameId) {
+    return <BigInfoText>No game ID provided</BigInfoText>;
+  }
 
   const { data } = useQuery<LiveFeed>(
     ['game', gameId],
@@ -45,9 +39,7 @@ function Index() {
   );
 
   return !data ? (
-    <div className='flex w-full h-full'>
-      <div className='m-auto text-6xl'>Loading...</div>
-    </div>
+    <BigInfoText>Loading...</BigInfoText>
   ) : (
     <LiveFeedDisplay data={data} />
   );
@@ -60,7 +52,6 @@ const LiveFeedDisplay: React.FC<{ data: LiveFeed }> = ({ data }) => {
   const linescore = data.liveData.linescore;
 
   const awayWinning = linescore.teams.away.goals > linescore.teams.home.goals;
-
   const homeWinning = linescore.teams.home.goals > linescore.teams.away.goals;
 
   return (
@@ -138,6 +129,12 @@ const RoundedBox: React.FC<
       props.winning ? 'bg-teal-300/90' : 'bg-teal-600/20'
     } rounded-xl ${props.className ?? ''}`}
   />
+);
+
+const BigInfoText: React.FC<React.PropsWithChildren> = ({ children }) => (
+  <div className='flex w-full h-full'>
+    <div className='m-auto text-6xl'>{children}</div>
+  </div>
 );
 
 const teamLogo = (teamId: number) => {
