@@ -1,3 +1,4 @@
+import { GameType } from './Game';
 import { Official, PartialPlayer, Player } from './Player';
 import { PartialTeam, Team } from './Team';
 
@@ -13,7 +14,7 @@ export interface LiveFeed {
     game: {
       pk: number; // id
       season: string;
-      type: string;
+      type: GameType;
     };
     datetime: {
       dateTime: string;
