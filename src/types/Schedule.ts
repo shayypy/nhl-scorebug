@@ -1,3 +1,4 @@
+import { LineScore } from './LiveFeed';
 import { Team } from './Team';
 
 export interface Schedule {
@@ -35,7 +36,13 @@ export interface Schedule {
         name: string;
         link: string;
       };
+      linescore?: LineScore; // hydrate=linescore
       content: { link: string };
+      tickets?: {
+        // hydrate=tickets
+        ticketType: string;
+        ticketLink: string;
+      }[];
     }[];
   }[];
   events: Array<unknown>;

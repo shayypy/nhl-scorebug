@@ -47,59 +47,7 @@ export interface LiveFeed {
       }[];
       currentPlay: Play;
     };
-    linescore: {
-      currentPeriod: 3;
-      currentPeriodOrdinal: PeriodOrdinal;
-      currentPeriodTimeRemaining: 'Final';
-      periods: {
-        periodType: 'REGULAR';
-        num: 1 | 2 | 3;
-        ordinalNum: PeriodOrdinal;
-        home: {
-          goals: number;
-          shotsOnGoal: number;
-        };
-        away: {
-          goals: number;
-          shotsOnGoal: number;
-        };
-      }[];
-      shootoutInfo: {
-        away: {
-          scores: number;
-          attempts: number;
-        };
-        home: {
-          scores: number;
-          attempts: number;
-        };
-      };
-      teams: {
-        home: {
-          team: PartialTeam;
-          goals: number;
-          shotsOnGoal: number;
-          goaliePulled: boolean;
-          numSkaters: number;
-          powerPlay: boolean;
-        };
-        away: {
-          team: PartialTeam;
-          goals: number;
-          shotsOnGoal: number;
-          goaliePulled: boolean;
-          numSkaters: number;
-          powerPlay: boolean;
-        };
-      };
-      powerPlayStrength: 'Even';
-      hasShootout: boolean;
-      intermissionInfo: {
-        intermissionTimeRemaining: number;
-        intermissionTimeElapsed: number;
-        inIntermission: boolean;
-      };
-    };
+    linescore: LineScore;
     boxscore: {
       teams: {
         away: TeamBoxScore;
@@ -112,6 +60,60 @@ export interface LiveFeed {
       secondStar: PartialPlayer;
       thirdStar: PartialPlayer;
     };
+  };
+}
+
+export interface LineScore {
+  currentPeriod: PeriodNum;
+  currentPeriodOrdinal: PeriodOrdinal;
+  currentPeriodTimeRemaining: 'Final';
+  periods: {
+    periodType: 'REGULAR';
+    num: 1 | 2 | 3;
+    ordinalNum: PeriodOrdinal;
+    home: {
+      goals: number;
+      shotsOnGoal: number;
+    };
+    away: {
+      goals: number;
+      shotsOnGoal: number;
+    };
+  }[];
+  shootoutInfo: {
+    away: {
+      scores: number;
+      attempts: number;
+    };
+    home: {
+      scores: number;
+      attempts: number;
+    };
+  };
+  teams: {
+    home: {
+      team: PartialTeam;
+      goals: number;
+      shotsOnGoal: number;
+      goaliePulled: boolean;
+      numSkaters: number;
+      powerPlay: boolean;
+    };
+    away: {
+      team: PartialTeam;
+      goals: number;
+      shotsOnGoal: number;
+      goaliePulled: boolean;
+      numSkaters: number;
+      powerPlay: boolean;
+    };
+  };
+  powerPlayStrength: 'Even';
+  hasShootout: boolean;
+  intermissionInfo: {
+    intermissionTimeRemaining: number;
+    intermissionTimeElapsed: number;
+    inIntermission: boolean;
   };
 }
 
@@ -197,4 +199,6 @@ interface TeamBoxScore {
   }[];
 }
 
+// 0 = not started yet
+export type PeriodNum = 0 | 1 | 2 | 3 | 4; // | 5;
 export type PeriodOrdinal = '1st' | '2nd' | '3rd' | 'OT'; // | 'SO';

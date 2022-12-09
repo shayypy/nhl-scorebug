@@ -27,7 +27,7 @@ function Index() {
       'schedule',
       async () => {
         const response = await fetch(
-          `${BASE}/schedule?hydrate=team&date=${now.getFullYear()}-${
+          `${BASE}/schedule?hydrate=team,linescore&date=${now.getFullYear()}-${
             now.getMonth() + 1
           }-${now.getDate()}`,
           {
@@ -66,6 +66,20 @@ function Index() {
                       {game.teams.home.team.abbreviation}
                     </span>
                   </div>
+                  {game.linescore && game.linescore.currentPeriod !== 0 && (
+                    <>
+                      <hr className='rounded-full border-2 border-teal-600 my-1' />
+                      <div className='flex'>
+                        <p>
+                          {game.linescore.teams.away.goals}
+                          <span className='opacity-30 mx-0.5'>-</span>
+                          {game.linescore.teams.home.goals}
+                        </p>
+                        <span className='opacity-30 mx-auto'>•</span>
+                        <p>{game.linescore.currentPeriodOrdinal}</p>
+                      </div>
+                    </>
+                  )}
                 </RoundedBox>
               </a>
             );
