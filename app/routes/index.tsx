@@ -196,10 +196,10 @@ export default function Index() {
           })}
         </div>
         <div className='mt-auto rounded-xl bg-teal-600/50 -mx-6 -mb-2 px-6 pt-3 pb-4 flex flex-col'>
-          <div className='flex mx-auto'>
+          <div className='flex flex-wrap mx-auto'>
             {authenticated ? (
               <>
-                <p className='text-4xl text-center py-1 mr-4'>
+                <p className='text-4xl text-center py-1 mr-3'>
                   Linked to {!deviceName && 'a scorebug'}
                 </p>
                 {deviceName && (
