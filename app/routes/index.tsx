@@ -33,7 +33,7 @@ export default function Index() {
       },
       {
         refetchInterval: 1200000,
-        refetchOnWindowFocus: false,
+        refetchOnWindowFocus: true,
       }
     );
 
@@ -100,7 +100,7 @@ export default function Index() {
     },
     {
       refetchInterval: 20000,
-      refetchOnWindowFocus: false,
+      refetchOnWindowFocus: true,
     }
   );
 
