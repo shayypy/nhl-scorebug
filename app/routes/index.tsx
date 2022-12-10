@@ -1,21 +1,101 @@
-import { LoaderArgs } from '@remix-run/node';
-import { Link, useLoaderData } from '@remix-run/react';
-import React from 'react';
+import {
+  ActionArgs,
+  LoaderArgs,
+  MetaFunction,
+  redirect,
+} from '@remix-run/node';
+import {
+  Link,
+  useActionData,
+  useLoaderData,
+  useSubmit,
+} from '@remix-run/react';
+import React, { useEffect } from 'react';
 import { useQuery } from 'react-query';
+import client from '~/redis.server';
 import { BASE } from '~/root';
+import { destroySession, getSession, verifySession } from '~/sessions';
 import { ErrorMessage } from '~/types/Error';
 import { LiveFeed } from '~/types/LiveFeed';
 import { Schedule } from '~/types/Schedule';
 
+export const currentGameIdKey = 'nhl-scorebug-current-game-id';
+
 export const loader = async ({ request }: LoaderArgs) => {
+  const session = await getSession(request.headers.get('Cookie'));
+
   const url = new URL(request.url);
+  const gameId = url.searchParams.get('gameId');
+  const currentGameId = await client.get(currentGameIdKey);
+
+  if (gameId && !currentGameId) {
+    await client.set(currentGameIdKey, gameId, { EX: 14400 });
+  }
+
   return {
-    gameId: url.searchParams.get('gameId'),
+    gameId,
+    currentGameId,
+    authenticated: session.has('code') as boolean,
+    deviceName: session.get('deviceName') as string | null,
   };
 };
 
+export const action = async ({ request }: ActionArgs) => {
+  const session = await getSession(request.headers.get('Cookie'));
+  if (!(await verifySession(session))) {
+    return redirect('/', {
+      headers: { 'Set-Cookie': await destroySession(session) },
+    });
+  }
+
+  const body = await request.formData();
+  const gameId = body.get('gameId');
+  if (!gameId || gameId === 'null') {
+    await client.del(currentGameIdKey);
+    return { currentGameId: null };
+  } else {
+    await client.set(
+      currentGameIdKey,
+      gameId.toString(),
+      { EX: 14400 } // 4 hours, room for a full regulation game + intermission + overtime + some more for good measure
+    );
+    return { currentGameId: gameId.toString() };
+  }
+};
+
+export const meta: MetaFunction = ({ data }) => ({
+  viewport: data.gameId ? undefined : 'width=device-width,initial-scale=1',
+});
+
 export default function Index() {
-  const { gameId } = useLoaderData<typeof loader>();
+  const submit = useSubmit();
+
+  const loaderData = useLoaderData<typeof loader>();
+  const actionData = useActionData<typeof action>();
+  let { gameId } = loaderData;
+  const { authenticated, deviceName } = loaderData;
+  const currentGameId =
+    (actionData && 'currentGameId' in actionData
+      ? actionData?.currentGameId
+      : undefined) ?? loaderData.currentGameId;
+
+  if (currentGameId && !gameId && !authenticated) {
+    gameId = currentGameId;
+  }
+
+  // Refresh the current game ID (loader data) every X seconds for authenticated
+  // machines (clients) and every Y seconds for the host machine
+  useEffect(() => {
+    const id = setInterval(
+      () => {
+        submit(null, { method: 'get', replace: true });
+      },
+      authenticated ? 30000 : 3000
+    );
+
+    return () => clearInterval(id);
+  }, []);
+
   if (!gameId) {
     const now = new Date();
     const { data } = useQuery<Schedule>(
@@ -47,54 +127,101 @@ export default function Index() {
           Games today,{' '}
           <span className='text-teal-900'>{now.toLocaleDateString()}</span>
         </h1>
-        <div className='flex flex-wrap mt-4 text-2xl text-teal-900 ml-4 overflow-y-auto'>
+        <div
+          className={`flex flex-wrap ${
+            authenticated ? '' : 'ml-4'
+          } mt-4 text-2xl text-teal-900 overflow-y-auto`}
+        >
           {data.dates[0].games.map((game) => {
-            return (
-              <Link key={game.gamePk} to={`/?gameId=${game.gamePk}`}>
-                <RoundedBox
-                  className={`p-3 m-2 w-40 hover:-translate-y-1 transition ${
-                    game.linescore?.currentPeriodTimeRemaining === 'Final'
-                      ? 'grayscale'
-                      : ''
+            const isCurrentGame = currentGameId === game.gamePk.toString();
+            const box = (
+              <RoundedBox
+                className={`p-3 m-2 w-40 ${
+                  game.linescore?.currentPeriodTimeRemaining === 'Final'
+                    ? 'grayscale'
+                    : ''
+                }`}
+              >
+                <div className='flex'>
+                  <span className='mx-auto'>
+                    {game.teams.away.team.abbreviation}
+                  </span>{' '}
+                  <span className='mx-auto opacity-30 text-lg'>@</span>{' '}
+                  <span className='mx-auto'>
+                    {game.teams.home.team.abbreviation}
+                  </span>
+                </div>
+                {game.linescore && game.linescore.currentPeriod !== 0 && (
+                  <>
+                    <hr className='rounded-full border-2 border-teal-600 my-1' />
+                    <div className='flex'>
+                      <p>
+                        {game.linescore.teams.away.goals}
+                        <span className='opacity-30 mx-0.5'>-</span>
+                        {game.linescore.teams.home.goals}
+                      </p>
+                      <span className='opacity-30 mx-auto'>•</span>
+                      <p>{game.linescore.currentPeriodOrdinal}</p>
+                    </div>
+                  </>
+                )}
+              </RoundedBox>
+            );
+            return authenticated ? (
+              <div className='mx-auto'>
+                {box}
+                <button
+                  className={`rounded-xl w-40 mx-2 mb-4 w-full bg-teal-300 text-lg p-3 active:bg-teal-400 transition ${
+                    isCurrentGame ? 'grayscale' : ''
                   }`}
+                  onClick={() => {
+                    submit(
+                      { gameId: isCurrentGame ? null : game.gamePk },
+                      { method: 'post', replace: true }
+                    );
+                  }}
                 >
-                  <div className='flex'>
-                    <span className='mx-auto'>
-                      {game.teams.away.team.abbreviation}
-                    </span>{' '}
-                    <span className='mx-auto opacity-30 text-lg'>@</span>{' '}
-                    <span className='mx-auto'>
-                      {game.teams.home.team.abbreviation}
-                    </span>
-                  </div>
-                  {game.linescore && game.linescore.currentPeriod !== 0 && (
-                    <>
-                      <hr className='rounded-full border-2 border-teal-600 my-1' />
-                      <div className='flex'>
-                        <p>
-                          {game.linescore.teams.away.goals}
-                          <span className='opacity-30 mx-0.5'>-</span>
-                          {game.linescore.teams.home.goals}
-                        </p>
-                        <span className='opacity-30 mx-auto'>•</span>
-                        <p>{game.linescore.currentPeriodOrdinal}</p>
-                      </div>
-                    </>
-                  )}
-                </RoundedBox>
+                  {isCurrentGame ? 'Showing' : 'Show'}
+                </button>
+              </div>
+            ) : (
+              <Link
+                key={game.gamePk}
+                to={`/?gameId=${game.gamePk}`}
+                className='hover:-translate-y-1 transition'
+              >
+                {box}
               </Link>
             );
           })}
         </div>
         <div className='mt-auto rounded-xl bg-teal-600/50 -mx-6 -mb-2 px-6 pt-3 pb-4 flex flex-col'>
           <div className='flex mx-auto'>
-            <p className='text-4xl text-center py-1 mr-4'>Use your phone:</p>
-            <Link
-              to='/link/setup'
-              className='rounded-xl bg-teal-100 hover:bg-teal-100/70 transition text-4xl text-center py-1 px-4'
-            >
-              SET UP
-            </Link>
+            {authenticated ? (
+              <>
+                <p className='text-4xl text-center py-1 mr-4'>
+                  Linked to {!deviceName && 'a scorebug'}
+                </p>
+                {deviceName && (
+                  <p className='rounded-xl bg-teal-100 text-4xl text-center py-1 px-4'>
+                    {deviceName}
+                  </p>
+                )}
+              </>
+            ) : (
+              // If the client is authenticated then we can safely assume it is not a host device
+              <>
+                <p className='text-4xl text-center py-1 mr-4'>
+                  Use your phone:
+                </p>
+                <Link
+                  to='/link/setup'
+                  className='rounded-xl bg-teal-100 hover:bg-teal-100/70 transition text-4xl text-center py-1 px-4'
+                >
+                  SET UP
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>

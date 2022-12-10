@@ -8,9 +8,7 @@ Largely, this project exists because some networks feel it's unnecessary to prov
 
 - Portable & pretty live data intended for viewing at a distance (e.g. at some kind of hockey party where you don't want to show all the games but you do want to show the scores?)
 - Nifty web interface to select games (designed for touchscreens)
-<!--
-  - Companion page for mobile phones to select a game from your sofa (currently unrestricted)
--->
+- Companion page for mobile phones to select a game from your sofa
 
 ## Screenshots
 

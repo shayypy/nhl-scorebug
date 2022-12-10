@@ -3,7 +3,7 @@ import { LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useSubmit } from '@remix-run/react';
 import client from '../redis.server';
 
-const randomString = (length: number) => {
+export const randomString = (length: number) => {
   const chars = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; // No 1 0 I L O to avoid confusion
   let result = '';
   for (let i = 0; i < length; i++) {
@@ -12,7 +12,7 @@ const randomString = (length: number) => {
   return result;
 };
 
-const redisCodeKey = 'nhl-scorebug-link-code';
+export const redisCodeKey = 'nhl-scorebug-link-code';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url);
