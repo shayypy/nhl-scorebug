@@ -51,7 +51,13 @@ export default function Index() {
           {data.dates[0].games.map((game) => {
             return (
               <Link key={game.gamePk} to={`/?gameId=${game.gamePk}`}>
-                <RoundedBox className='p-3 m-2 w-40 hover:-translate-y-1 transition'>
+                <RoundedBox
+                  className={`p-3 m-2 w-40 hover:-translate-y-1 transition ${
+                    game.linescore?.currentPeriodTimeRemaining === 'Final'
+                      ? 'grayscale'
+                      : ''
+                  }`}
+                >
                   <div className='flex'>
                     <span className='mx-auto'>
                       {game.teams.away.team.abbreviation}
