@@ -1,4 +1,4 @@
-import { LoaderFunction } from '@remix-run/node';
+import { LoaderArgs } from '@remix-run/node';
 import { Link, useLoaderData } from '@remix-run/react';
 import React from 'react';
 import { useQuery } from 'react-query';
@@ -7,7 +7,7 @@ import { ErrorMessage } from '~/types/Error';
 import { LiveFeed } from '~/types/LiveFeed';
 import { Schedule } from '~/types/Schedule';
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url);
   return {
     gameId: url.searchParams.get('gameId'),
