@@ -23,7 +23,7 @@ export const BASE = 'https://statsapi.web.nhl.com/api/v1';
 
 export default function App() {
   return (
-    <html lang='en'>
+    <html lang='en' className='bg-black overflow-hidden'>
       <head>
         <Meta />
         <Links />
