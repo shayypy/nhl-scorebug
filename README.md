@@ -14,9 +14,9 @@ Largely, this project exists because some networks feel it's unnecessary to prov
 
 I do not provide a public instance of this project (you should [self-host](#self-hosting) if you wish to use it), so here are some screenshots.
 
-![Index](https://cdn.discordapp.com/attachments/663900311886364673/1050918926915215421/Screenshot_2022-12-09_at_18-32-57_NHL_Scorebug.png)
+![Index](https://cdn.discordapp.com/attachments/663900311886364673/1051226729596858408/Screenshot_2022-12-10_at_14-59-23_NHL_Scorebug.png)
 
-Note that 192.168.1.8 is the IP of my computer on my local network. Yours may be different, and clients must be connected to the same network to access it.
+"SET UP" is a button that leads to the linking page for mobile/controller devices.
 
 ![Game page](https://cdn.discordapp.com/attachments/663900311886364673/1050918927204634734/Screenshot_2022-12-09_at_18-34-30_NHL_Scorebug.png)
 
