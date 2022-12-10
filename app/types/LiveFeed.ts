@@ -201,5 +201,5 @@ interface TeamBoxScore {
 }
 
 // 0 = not started yet
-export type PeriodNum = 0 | 1 | 2 | 3 | 4; // | 5;
-export type PeriodOrdinal = '1st' | '2nd' | '3rd' | 'OT'; // | 'SO';
+export type PeriodNum = 0 | 1 | 2 | 3 | 4 | 5;
+export type PeriodOrdinal = '1st' | '2nd' | '3rd' | 'OT' | 'SO';
