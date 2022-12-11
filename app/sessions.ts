@@ -6,10 +6,13 @@ const { getSession, commitSession, destroySession } =
     cookie: {
       name: '__scorebug_link_session',
 
-      expires: new Date(2038, 1, 1),
       httpOnly: true,
       path: '/',
       sameSite: 'lax',
+      maxAge: 5184000,
+      secrets: process.env.COOKIE_SECRET
+        ? [process.env.COOKIE_SECRET]
+        : undefined,
     },
   });
 

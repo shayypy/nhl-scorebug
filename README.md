@@ -39,6 +39,7 @@ This section will not be too in-depth but it should be sufficient especially if 
 5. Create a new file named `.env`. Fill it with the following keys (separated by line breaks):
 
    - `REDIS_URI=redis://...` - URI to your Redis server (like `redis://user:password@host:port/dbnum`)
+   - (optional) `COOKIE_SECRET=anything` - a secret to [sign the link cookie](https://remix.run/docs/en/v1/utils/cookies#signing-cookies)
    - (optional) `DEVICE_NAME=anything` - the name that clients will see when they link to your scorebug
 
 6. Start the server (`yarn start` or `npm run start` - this will build and start the server and put its address in the terminal)
