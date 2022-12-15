@@ -176,7 +176,7 @@ export default function Index() {
                   }`}
                   onClick={() => {
                     submit(
-                      { gameId: isCurrentGame ? null : game.gamePk },
+                      { gameId: isCurrentGame ? '' : game.gamePk.toString() },
                       { method: 'post', replace: true }
                     );
                   }}
