@@ -99,6 +99,36 @@ export default function Index() {
     return () => clearInterval(id);
   }, [gameId]);
 
+  // Support Amazon Fire TV remotes (or any other remote that uses these button inputs)
+  // This feature was tested with model number CV98LM
+  // Unfortunately some keys do not seem to be possible to detect with browser
+  // JS, like the home button--BrowserHome--and the back/menu buttons. If you
+  // know how to do this, please file an issue!
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      switch (e.key) {
+        case 'ArrowUp':
+          // Up on circle
+          break;
+        case 'ArrowDown':
+          // Down on circle
+          break;
+        case 'ArrowLeft':
+          // Left on circle
+          break;
+        case 'ArrowRight':
+          // Right on circle
+          break;
+        case 'Enter':
+          // Middle button
+          break;
+        default:
+          break;
+      }
+    };
+
+    addEventListener('keydown', handler);
+    return () => removeEventListener('keydown', handler);
   }, []);
 
   if (!gameId) {
