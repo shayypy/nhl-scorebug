@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { LoaderArgs, redirect } from '@remix-run/node';
 import { useLoaderData, useSubmit } from '@remix-run/react';
-import client from '../redis.server';
+import { getClient } from '~/redis.server';
 
 export const randomString = (length: number) => {
   const chars = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; // No 1 0 I L O to avoid confusion
@@ -17,6 +17,7 @@ export const redisCodeKey = 'nhl-scorebug-link-code';
 export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url);
   const currentCode = url.searchParams.get('currentCode');
+  const client = await getClient();
   if (currentCode) {
     const codeData = await client.get(`nhl-scorebug-code-${currentCode}`);
     if (codeData) {

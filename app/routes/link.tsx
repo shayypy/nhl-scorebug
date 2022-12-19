@@ -8,14 +8,16 @@ import {
 } from '@remix-run/react';
 import { randomString, redisCodeKey } from './link.setup';
 import { commitSession, getSession } from '~/sessions';
-import client from '~/redis.server';
+import { getClient } from '~/redis.server';
 
 export const loader = async () => {
+  const client = await getClient();
   const code = await client.get(redisCodeKey);
   return { codeExists: !!code };
 };
 
 export const action = async ({ request }: ActionArgs) => {
+  const client = await getClient();
   const code = await client.get(redisCodeKey);
   if (!code) {
     return {

@@ -12,7 +12,7 @@ import {
 } from '@remix-run/react';
 import React, { useEffect } from 'react';
 import { useQuery } from 'react-query';
-import client from '~/redis.server';
+import { getClient } from '~/redis.server';
 import { BASE } from '~/root';
 import { destroySession, getSession, verifySession } from '~/sessions';
 import { ErrorMessage } from '~/types/Error';
@@ -26,11 +26,12 @@ export const loader = async ({ request }: LoaderArgs) => {
 
   const url = new URL(request.url);
   const gameId = url.searchParams.get('gameId');
-  const currentGameId = await client.get(currentGameIdKey);
 
   if (gameId && !currentGameId) {
     await client.set(currentGameIdKey, gameId, { EX: 14400 });
   }
+  const client = await getClient();
+  const currentGameId = await client.get(currentGameIdKey);
 
   return {
     gameId,
@@ -48,6 +49,7 @@ export const action = async ({ request }: ActionArgs) => {
     });
   }
 
+  const client = await getClient();
   const body = await request.formData();
   const gameId = body.get('gameId');
   if (!gameId || gameId === 'null') {
