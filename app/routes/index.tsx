@@ -18,6 +18,7 @@ import { destroySession, getSession, verifySession } from '~/sessions';
 import { ErrorMessage } from '~/types/Error';
 import { LiveFeed } from '~/types/LiveFeed';
 import { Schedule } from '~/types/Schedule';
+import { loader as displayLoader } from './api.display';
 
 export const currentGameIdKey = 'nhl-scorebug-current-game-id';
 
@@ -27,9 +28,6 @@ export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url);
   const gameId = url.searchParams.get('gameId');
 
-  if (gameId && !currentGameId) {
-    await client.set(currentGameIdKey, gameId, { EX: 14400 });
-  }
   const client = await getClient();
   const currentGameId = await client.get(currentGameIdKey);
 
@@ -74,28 +72,33 @@ export default function Index() {
 
   const loaderData = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
-  let { gameId } = loaderData;
-  const { authenticated, deviceName } = loaderData;
-  const currentGameId =
+  const { gameId, authenticated, deviceName } = loaderData;
+
+  let currentGameId =
     (actionData && 'currentGameId' in actionData
       ? actionData?.currentGameId
       : undefined) ?? loaderData.currentGameId;
-
-  if (currentGameId && !gameId && !authenticated) {
-    gameId = currentGameId;
-  }
 
   // Refresh the current game ID (loader data) every X seconds for authenticated
   // machines (clients) and every Y seconds for the host machine
   useEffect(() => {
     const id = setInterval(
       () => {
-        submit(null, { method: 'get', replace: true });
+        fetch('/api/display', { method: 'GET' })
+          .then((r) => r.json() as ReturnType<typeof displayLoader>)
+          .then((d) => {
+            currentGameId = d.currentGameId;
+            if (currentGameId !== gameId && !authenticated) {
+              submit({ gameId: currentGameId ?? '' }, { method: 'get' });
+            }
+          });
       },
       authenticated ? 30000 : 3000
     );
 
     return () => clearInterval(id);
+  }, [gameId]);
+
   }, []);
 
   if (!gameId) {
