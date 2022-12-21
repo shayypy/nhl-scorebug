@@ -1,9 +1,4 @@
-import {
-  ActionArgs,
-  LoaderArgs,
-  MetaFunction,
-  redirect,
-} from '@remix-run/node';
+import { ActionArgs, LoaderArgs, MetaFunction } from '@remix-run/node';
 import {
   Link,
   useActionData,
@@ -14,7 +9,7 @@ import React, { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { getClient } from '~/redis.server';
 import { BASE } from '~/root';
-import { destroySession, getSession, verifySession } from '~/sessions';
+import { getSession } from '~/sessions';
 import { ErrorMessage } from '~/types/Error';
 import { LiveFeed } from '~/types/LiveFeed';
 import { Schedule } from '~/types/Schedule';
@@ -26,7 +21,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   const session = await getSession(request.headers.get('Cookie'));
 
   const url = new URL(request.url);
-  const gameId = url.searchParams.get('gameId');
+  const gameId = url.searchParams.get('gameId') || null;
 
   const client = await getClient();
   const currentGameId = await client.get(currentGameIdKey);
@@ -40,12 +35,12 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export const action = async ({ request }: ActionArgs) => {
-  const session = await getSession(request.headers.get('Cookie'));
-  if (!(await verifySession(session))) {
-    return redirect('/', {
-      headers: { 'Set-Cookie': await destroySession(session) },
-    });
-  }
+  // const session = await getSession(request.headers.get('Cookie'));
+  // if (!(await verifySession(session))) {
+  //   return redirect('/', {
+  //     headers: { 'Set-Cookie': await destroySession(session) },
+  //   });
+  // }
 
   const client = await getClient();
   const body = await request.formData();
@@ -289,6 +284,8 @@ export default function Index() {
 }
 
 const LiveFeedDisplay: React.FC<{ data: LiveFeed }> = ({ data }) => {
+  const submit = useSubmit();
+
   const home = data.gameData.teams.home;
   const away = data.gameData.teams.away;
   // const play = data.liveData.plays.currentPlay;
@@ -355,6 +352,15 @@ const LiveFeedDisplay: React.FC<{ data: LiveFeed }> = ({ data }) => {
       <RoundedBox className='p-5 mt-4 text-center text-7xl'>
         {linescore.currentPeriodOrdinal} -{' '}
         {linescore.currentPeriodTimeRemaining}
+        <button
+          className='absolute right-[1.5rem] bottom-5 p-8 w-28 rounded-xl bg-red-400 text-5xl opacity-20 hover:opacity-100 transition'
+          onClick={() => {
+            submit({ gameId: 'null' }, { method: 'post' });
+            submit(null, { method: 'get', replace: true });
+          }}
+        >
+          x
+        </button>
       </RoundedBox>
     </div>
   );
