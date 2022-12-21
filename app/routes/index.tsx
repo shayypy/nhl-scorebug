@@ -1,4 +1,9 @@
-import { ActionArgs, LoaderArgs, MetaFunction } from '@remix-run/node';
+import {
+  ActionArgs,
+  LoaderArgs,
+  MetaFunction,
+  redirect,
+} from '@remix-run/node';
 import {
   Link,
   useActionData,
@@ -47,7 +52,11 @@ export const action = async ({ request }: ActionArgs) => {
   const gameId = body.get('gameId');
   if (!gameId || gameId === 'null') {
     await client.del(currentGameIdKey);
-    return { currentGameId: null };
+    if (body.get('redirectAfterClear') === 'true') {
+      return redirect('/');
+    } else {
+      return { currentGameId: null };
+    }
   } else {
     await client.set(
       currentGameIdKey,
@@ -364,8 +373,10 @@ const LiveFeedDisplay: React.FC<{ data: LiveFeed }> = ({ data }) => {
         <button
           className='absolute right-[1.5rem] bottom-5 p-8 w-28 rounded-xl bg-red-400 text-5xl opacity-20 hover:opacity-100 transition'
           onClick={() => {
-            submit({ gameId: 'null' }, { method: 'post' });
-            submit(null, { method: 'get', replace: true });
+            submit(
+              { gameId: 'null', redirectAfterClear: 'true' },
+              { method: 'post', replace: true }
+            );
           }}
         >
           x
