@@ -82,8 +82,17 @@ export default function Index() {
         fetch('/api/display', { method: 'GET' })
           .then((r) => r.json() as ReturnType<typeof displayLoader>)
           .then((d) => {
+            const last = currentGameId;
             currentGameId = d.currentGameId;
-            if (currentGameId !== gameId && !authenticated) {
+            if (
+              // currentGameId was equal to displayed game but it is now null (it was probably cleared; clear it)
+              ((last && last === gameId && !currentGameId) ||
+                // currentGameId existed but it has changed (it was probably remotely set; change it)
+                (last && currentGameId && last !== currentGameId) ||
+                // currentGameId did not exist but now it does
+                (!last && currentGameId)) &&
+              !authenticated
+            ) {
               submit({ gameId: currentGameId ?? '' }, { method: 'get' });
             }
           });
