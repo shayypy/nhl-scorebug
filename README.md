@@ -22,6 +22,10 @@ I do not provide a public instance of this project (you should [self-host](#self
 
 The above shows game ID `2022020001`. In the event that both teams' scores are the same (during a game), neither box is highlighted.
 
+![Mobile view](https://cdn.discordapp.com/attachments/663900311886364673/1055157046963617792/IMG_3646.png)
+
+The newer Safari design (with the address bar at the bottom) obscures the "Linked to [...]" bar, but the app still works fine without it. Pictured is Firefox on iOS 15. "TV" is the `DEVICE_NAME` of my scorebug device.
+
 ## Self-hosting
 
 This section will not be too in-depth but it should be sufficient especially if you have done something like this before. If you're having trouble, feel free to [reach out to me](https://shay.cat) (click the "holler" button).
