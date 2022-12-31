@@ -216,8 +216,8 @@ export default function Index() {
               </RoundedBox>
             );
             return authenticated ? (
-              <div className='mx-auto'>
-                {box}
+              <div key={game.gamePk} className='mx-auto'>
+                <Link to={`/games/${game.gamePk}`}>{box}</Link>
                 <button
                   className={`rounded-xl w-40 mx-2 mb-4 w-full bg-teal-300 text-lg p-3 active:bg-teal-400 transition ${
                     isCurrentGame ? 'grayscale' : ''
@@ -400,7 +400,9 @@ export const RoundedBox: React.FC<
   />
 );
 
-export const BigInfoText: React.FC<React.PropsWithChildren> = ({ children }) => (
+export const BigInfoText: React.FC<React.PropsWithChildren> = ({
+  children,
+}) => (
   <div className='flex w-full h-full'>
     <div className='m-auto text-6xl text-center'>{children}</div>
   </div>
