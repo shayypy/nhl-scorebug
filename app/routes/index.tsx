@@ -386,7 +386,7 @@ const LiveFeedDisplay: React.FC<{ data: LiveFeed }> = ({ data }) => {
   );
 };
 
-const RoundedBox: React.FC<
+export const RoundedBox: React.FC<
   React.DetailedHTMLProps<
     React.HTMLAttributes<HTMLDivElement>,
     HTMLDivElement
@@ -400,7 +400,7 @@ const RoundedBox: React.FC<
   />
 );
 
-const BigInfoText: React.FC<React.PropsWithChildren> = ({ children }) => (
+export const BigInfoText: React.FC<React.PropsWithChildren> = ({ children }) => (
   <div className='flex w-full h-full'>
     <div className='m-auto text-6xl text-center'>{children}</div>
   </div>
@@ -415,6 +415,6 @@ const timestampToDate = (timestamp: string) => {
   }
 };
 
-const teamLogo = (teamId: number) => {
+export const teamLogo = (teamId: number) => {
   return `https://www-league.nhlstatic.com/images/logos/teams-20222023-light/${teamId}.svg`;
 };
