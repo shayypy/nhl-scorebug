@@ -119,15 +119,41 @@ export interface LineScore {
 }
 
 export interface Play {
-  players: {
+  players?: {
     player: PartialPlayer;
-    playerType: 'Scorer' | 'Assist' | 'Goalie' | 'PenaltyOn';
+    playerType: 'Shooter' | 'Scorer' | 'Assist' | 'Goalie' | 'PenaltyOn';
     seasonTotal?: number;
   }[];
   result: {
-    event: 'Goal' | 'Penalty';
+    event:
+      | 'Goal'
+      | 'Penalty'
+      | 'Stoppage'
+      | 'Blocked Shot'
+      | 'Missed Shot'
+      | 'Hit'
+      | 'Faceoff'
+      | 'Period Start'
+      | 'Period End'
+      | 'Period Official'
+      | 'Period Ready'
+      | 'Takeaway'
+      | 'Game Scheduled';
     eventCode: string;
-    eventTypeId: 'GOAL' | 'PENALTY';
+    eventTypeId:
+      | 'GOAL'
+      | 'PENALTY'
+      | 'STOP'
+      | 'BLOCKED_SHOT'
+      | 'MISSED_SHOT'
+      | 'HIT'
+      | 'FACEOFF'
+      | 'PERIOD_START'
+      | 'PERIOD_END'
+      | 'PERIOD_OFFICIAL'
+      | 'PERIOD_READY'
+      | 'TAKEAWAY'
+      | 'GAME_SCHEDULED';
     description: string;
     strength?: {
       code: string; // SHG
@@ -142,8 +168,8 @@ export interface Play {
   about: {
     eventIdx: number;
     eventId: number;
-    period: 1 | 2 | 3;
-    periodType: 'REGULAR'; // | 'OVERTIME';
+    period: PeriodNum;
+    periodType: 'REGULAR' | 'OVERTIME' | 'SHOOTOUT';
     ordinalNum: PeriodOrdinal;
     periodTime: string;
     periodTimeRemaining: string;
