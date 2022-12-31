@@ -10,9 +10,7 @@ const { getSession, commitSession, destroySession } =
       path: '/',
       sameSite: 'lax',
       maxAge: 5184000,
-      secrets: process.env.COOKIE_SECRET
-        ? [process.env.COOKIE_SECRET]
-        : undefined,
+      secrets: process.env.COOKIE_SECRET ? [process.env.COOKIE_SECRET] : [],
     },
   });
 
