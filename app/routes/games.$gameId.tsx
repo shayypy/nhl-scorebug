@@ -179,7 +179,11 @@ export const RosterPlayer = ({ player }: { player: Player }) => (
         src={playerImage(player.id)}
         className='w-14 h-14 mr-2.5 rounded-full'
         alt={player.fullName}
-        onError={(e) => (e.currentTarget.src = playerImage(null))}
+        onError={(e) =>
+          (e.currentTarget.src = playerImage(
+            player.primaryPosition.abbreviation === 'G' ? 'goalie' : 'skater'
+          ))
+        }
       />
       <p className='text-xl my-auto'>{player.lastName},</p>
       <p className='text-base my-auto truncate ml-1'>{player.firstName}</p>
@@ -190,7 +194,7 @@ export const RosterPlayer = ({ player }: { player: Player }) => (
   </RoundedBox>
 );
 
-export const playerImage = (playerId: number | null, size?: string) =>
-  `https://cms.nhl.bamgrid.com/images/headshots/current/${size ?? '60x60'}/${
-    playerId ?? 'skater'
-  }@2x.jpg`;
+export const playerImage = (playerId: number | string, size?: string) =>
+  `https://cms.nhl.bamgrid.com/images/headshots/current/${
+    size ?? '60x60'
+  }/${playerId}@2x.png`;
