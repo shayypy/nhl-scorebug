@@ -188,7 +188,7 @@ export const RosterPlayer = ({ player }: { player: Player }) => (
       <p className='text-xl my-auto'>{player.lastName},</p>
       <p className='text-base my-auto truncate ml-1'>{player.firstName}</p>
       <p className='uppercase text-lg opacity-50 my-auto ml-2'>
-        {player.primaryNumber}
+        #{player.primaryNumber}
       </p>
     </a>
   </RoundedBox>
