@@ -13,10 +13,10 @@ export interface Player {
   nationality: string;
   height: string;
   weight: number;
-  active: true;
-  alternateCaptain: false;
-  captain: false;
-  rookie: true;
+  active: boolean;
+  alternateCaptain: boolean;
+  captain: boolean;
+  rookie: boolean;
   shootsCatches: string;
   rosterStatus: string;
   currentTeam: {
