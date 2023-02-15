@@ -1,4 +1,4 @@
-import { createCookieSessionStorage } from '@remix-run/node';
+import { createCookieSessionStorage, Session } from '@remix-run/node';
 import { verifyCode } from './redis.server';
 
 const { getSession, commitSession, destroySession } =
@@ -16,6 +16,6 @@ const { getSession, commitSession, destroySession } =
 
 export { getSession, commitSession, destroySession };
 
-export const verifySession = (session: any) => {
+export const verifySession = (session: Session) => {
   return verifyCode(session.get('code'), session.get('token'));
 };
