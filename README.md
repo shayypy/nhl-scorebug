@@ -14,15 +14,15 @@ Largely, this project exists because some networks feel it's unnecessary to prov
 
 I do not provide a public instance of this project (you should [self-host](#self-hosting) if you wish to use it), so here are some screenshots.
 
-![Index](https://cdn.discordapp.com/attachments/663900311886364673/1051226729596858408/Screenshot_2022-12-10_at_14-59-23_NHL_Scorebug.png)
+![Index](https://github.com/shayypy/puck-buddy/assets/43248357/5dcc6288-66c2-4104-ad72-f75b98d84725)
 
 "SET UP" is a button that leads to the linking page for mobile/controller devices.
 
-![Game page](https://cdn.discordapp.com/attachments/663900311886364673/1050918927204634734/Screenshot_2022-12-09_at_18-34-30_NHL_Scorebug.png)
+![Game page](https://github.com/shayypy/puck-buddy/assets/43248357/e2eacdce-dbd5-4677-9696-323024b18fe7)
 
 The above shows game ID `2022020001`. In the event that both teams' scores are the same (during a game), neither box is highlighted.
 
-![Mobile view](https://cdn.discordapp.com/attachments/663900311886364673/1055157046963617792/IMG_3646.png)
+![Mobile view](https://github.com/shayypy/puck-buddy/assets/43248357/06c25990-f379-4a4a-981b-02bf76bbe378)
 
 The newer Safari design (with the address bar at the bottom) obscures the "Linked to [...]" bar, but the app still works fine without it. Pictured is Firefox on iOS 15. "TV" is the `DEVICE_NAME` of my scorebug device.
 
